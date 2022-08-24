@@ -16,9 +16,9 @@ const thoughtSchema = new Schema(
       type: String,
       required: true,
     },
-    // userName: [{
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'User',
+    // userId: [{
+    //     type: new Schema.Types.ObjectId,
+        // ref: 'User',
     //   }],
   },
   {
