@@ -21,7 +21,7 @@ module.exports = {
       .select('-__v')
       .then((thought) =>
         !thought
-          ? res.status(404).json({ message: 'No thought with that ID' })
+          ? res.status(404).json({ message: 'no such thought' })
           : res.json(thought)
       )
       .catch((err) => console.log(err).res.status(500).json(err));
@@ -43,7 +43,7 @@ module.exports = {
             !user
             ? res
                 .status(404)
-                .json({ message: 'No user found with that ID' })
+                .json({ message: 'no such user' })
             : res.json(user)
         )
         .catch((err) => res.status(500).json(err));
@@ -54,10 +54,10 @@ module.exports = {
   
   
   addReaction(req, res) {
-    console.log('You are adding a reaction');
+    console.log('adding a reaction');
     console.log(req.body);
     Thought.findOneAndUpdate(
-      { _id: req.params.thoughtId },
+      { _id: req.body.thoughtId },
       { $addToSet: { reactions: req.body } },
       { runValidators: true, new: true }
     )
@@ -65,15 +65,29 @@ module.exports = {
         !thought
           ? res
               .status(404)
-              .json({ message: 'No thought found with that ID :(' })
+              .json({ message: 'no such thought' })
           : res.json(thought)
       )
       .catch((err) => res.status(500).json(err));
   },
-
+  removeReaction(req, res) {
+    Thought.findOneAndUpdate(
+      { _id: req.body.thoughtId },
+      { $pull: { reactions: { reactionId: req.body.reactionId } } },
+      { runValidators: true, new: true }
+    )
+      .then((reaction) =>
+        !reaction
+          ? res
+              .status(404)
+              .json({ message: 'no such reaction' })
+          : res.json(student)
+      )
+      .catch((err) => res.status(500).json(err));
+  },
 
 addThought(req, res) {
-    console.log('You are adding a thought');
+    console.log('adding a thought');
     console.log(req.body);
     User.findOneAndUpdate(
       { _id: req.body.userId },
@@ -84,7 +98,7 @@ addThought(req, res) {
         !user
           ? res
               .status(404)
-              .json({ message: 'No user found with that ID' })
+              .json({ message: 'no such user' })
           : res.json(user)
       )
       .catch((err) => res.status(500).json(err));
@@ -122,7 +136,7 @@ addThought(req, res) {
     )
       .then((thought) =>
         !course
-          ? res.status(404).json({ message: 'No course with this id!' })
+          ? res.status(404).json({ message: 'no such course' })
           : res.json(thought)
       )
       .catch((err) => res.status(500).json(err));

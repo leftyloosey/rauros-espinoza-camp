@@ -3,7 +3,7 @@ const {
   getThoughts,
   getSingleThought,
   createThought,
-  addThought,
+  addReaction,
   updateThought,
   deleteThought,
 } = require('../../controllers/thoughtController.js');
@@ -11,7 +11,7 @@ const {
 router.route('/').get(getThoughts).post(createThought)
 router.route('/add/:userId').post(createThought)
 
-// router.route('/').get(getThoughts).post(addThought);
+router.route('/react').get(getThoughts).post(addReaction);
 
 router
   .route('/:thoughtId/thought')

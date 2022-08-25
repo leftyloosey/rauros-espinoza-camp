@@ -29,7 +29,7 @@ module.exports = {
           .select('-__v')
           .then(async (user) =>
             !user
-              ? res.status(404).json({ message: 'No user with that ID' })
+              ? res.status(404).json({ message: 'no such user' })
               : res.json({
                   user,
                   // grade: await grade(req.params.studentId),
@@ -64,7 +64,7 @@ module.exports = {
           });
       },
       addFriend(req, res) {
-        console.log('You are adding a friend');
+        console.log('adding a friend');
         console.log(req.body);
         User.findOneAndUpdate(
           { _id: req.params.userId },
@@ -75,21 +75,12 @@ module.exports = {
             !user
               ? res
                   .status(404)
-                  .json({ message: 'No user found with that ID' })
+                  .json({ message: 'No such user' })
               : res.json(user)
           )
           .catch((err) => res.status(500).json(err));
       },
-      deleteCourse(req, res) {
-        Course.findOneAndDelete({ _id: req.params.courseId })
-          .then((course) =>
-            !course
-              ? res.status(404).json({ message: 'No course with that ID' })
-              : Student.deleteMany({ _id: { $in: course.students } })
-          )
-          .then(() => res.json({ message: 'Course and students deleted!' }))
-          .catch((err) => res.status(500).json(err));
-      },
+
       
       updateUser(req, res) {
         User.findOneAndUpdate(
