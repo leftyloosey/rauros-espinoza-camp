@@ -31,9 +31,10 @@ module.exports = {
     const n = new Thought();
     n.thoughtText = req.body.thoughtText;
     n.userName = req.body.userName;
+    
     n.save((err, nThought) => {
     console.log(nThought._id)
-
+    
     User.findByIdAndUpdate(
             { _id: req.body.userId },
             { $addToSet: { thoughts: nThought._id } },
@@ -57,7 +58,7 @@ module.exports = {
     console.log('adding a reaction');
     console.log(req.body);
     Thought.findOneAndUpdate(
-      { _id: req.body.thoughtId },
+      { _id: req.params.thoughtId },
       { $addToSet: { reactions: req.body } },
       { runValidators: true, new: true }
     )
@@ -72,7 +73,7 @@ module.exports = {
   },
   removeReaction(req, res) {
     Thought.findOneAndUpdate(
-      { _id: req.body.thoughtId },
+      { _id: req.params.thoughtId },
       { $pull: { reactions: { reactionId: req.body.reactionId } } },
       { runValidators: true, new: true }
     )
@@ -81,7 +82,7 @@ module.exports = {
           ? res
               .status(404)
               .json({ message: 'no such reaction' })
-          : res.json(student)
+          : res.json(reaction)
       )
       .catch((err) => res.status(500).json(err));
   },
@@ -135,8 +136,8 @@ addThought(req, res) {
       { runValidators: true, new: true }
     )
       .then((thought) =>
-        !course
-          ? res.status(404).json({ message: 'no such course' })
+        !thought
+          ? res.status(404).json({ message: 'no such' })
           : res.json(thought)
       )
       .catch((err) => res.status(500).json(err));

@@ -44,10 +44,10 @@ module.exports = {
         User.findOneAndRemove({ _id: req.params.userId })
           .then((user) =>
             !user
-              ? res.status(404).json({ message: 'No such user' })
+              ? res.status(404).json({ message: 'no such user' })
               : User.findOneAndUpdate(
                   { users: req.params.userId },
-                  { $pull: { users: req.params.userId } },
+                  { $pull: { thoughts: req.params.thoughtId } },
                   { new: true }
                 )
           )
@@ -75,7 +75,24 @@ module.exports = {
             !user
               ? res
                   .status(404)
-                  .json({ message: 'No such user' })
+                  .json({ message: 'no such user' })
+              : res.json(user)
+          )
+          .catch((err) => res.status(500).json(err));
+      },
+      removeFriend(req, res) {
+        console.log('removing a friend');
+        console.log(req.body);
+        User.findOneAndUpdate(
+          { _id: req.params.userId },
+          { $pull: { friends: req.body._id } },
+          { runValidators: true, new: true }
+        )
+          .then((user) =>
+            !user
+              ? res
+                  .status(404)
+                  .json({ message: 'no such user' })
               : res.json(user)
           )
           .catch((err) => res.status(500).json(err));
@@ -84,13 +101,13 @@ module.exports = {
       
       updateUser(req, res) {
         User.findOneAndUpdate(
-          { _id: req.params.courseId },
+          { _id: req.params.userId },
           { $set: req.body },
           { runValidators: true, new: true }
         )
           .then((user) =>
             !user
-              ? res.status(404).json({ message: 'No course with this id!' })
+              ? res.status(404).json({ message: 'no such user' })
               : res.json(user)
           )
           .catch((err) => res.status(500).json(err));
